@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import TasksContainer from "./TasksContainer";
+
+import Tasks from "../Tasks/Tasks";
+
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -46,8 +48,46 @@ const AddTaskButton = styled.button`
     transition: all 0.4s ease 0s;
   }
 `;
+
+export interface Task {
+  id: number;
+  description: string;
+}
+
 const Main = () => {
   const [inputValue, setInputValue] = useState<string>("");
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [refreshList, setRefreshList] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem("tasks") !== null) {
+      setTasks(JSON.parse(localStorage.getItem("tasks") || ""));
+      setRefreshList(false);
+    } else {
+      setRefreshList(false);
+    }
+  }, [refreshList]);
+
+  const AddTask = (task: string) => {
+    const tasksList: Task[] = tasks;
+    if (task.trim() === "") {
+      alert("debe ingresar una tarea antes de agregarla");
+      return;
+    }
+    tasksList.push({ id: tasks.length + 1, description: task });
+    localStorage.setItem("tasks", JSON.stringify(tasksList));
+    setInputValue("");
+    setRefreshList(true);
+  };
+
+  // Get item
+  //const storage = () =>
+  //console.log(JSON.parse(localStorage.getItem("tasks") || ""));
+  // Remove Item
+  // localStorage.removeItem('Key');
+
+  //Clear all items of localstorage
+  // localStorage.clear();
 
   return (
     <Container>
@@ -62,13 +102,20 @@ const Main = () => {
         />
         <AddTaskButton
           onClick={() => {
-            localStorage.setItem("task", inputValue);
+            AddTask(inputValue);
           }}
         >
           +
         </AddTaskButton>
+        {/* <AddTaskButton
+          onClick={() => {
+            localStorage.clear();
+          }}
+        >
+          Borrar
+        </AddTaskButton> */}
       </AddTaskContainer>
-      <TasksContainer />
+      <Tasks tasks={tasks} />
     </Container>
   );
 };
