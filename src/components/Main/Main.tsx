@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 
-import Tasks from "../Tasks/Tasks";
+import Products from "../Products/Products";
 
 const Container = styled.div`
   display: flex;
@@ -49,34 +49,50 @@ const AddTaskButton = styled.button`
   }
 `;
 
-export interface Task {
+export interface Product {
   id: number;
-  description: string;
+  name: string;
+  price: number;
+  quantity: number;
 }
 
 const Main = () => {
-  const [inputValue, setInputValue] = useState<string>("");
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [productName, setProductName] = useState<string>("");
+  const [productPrice, setProductPrice] = useState<number>(0);
+  const [productQuantity, setProductQuantity] = useState<number>(1);
+  const [products, setProducts] = useState<Product[]>([]);
   const [refreshList, setRefreshList] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem("tasks") !== null) {
-      setTasks(JSON.parse(localStorage.getItem("tasks") || ""));
+    if (localStorage.getItem("products") !== null) {
+      setProducts(JSON.parse(localStorage.getItem("products") || ""));
       setRefreshList(false);
     } else {
       setRefreshList(false);
     }
   }, [refreshList]);
 
-  const AddTask = (task: string) => {
-    const tasksList: Task[] = tasks;
-    if (task.trim() === "") {
-      alert("debe ingresar una tarea antes de agregarla");
+  const AddProduct = (name: string, price: number, quantity?: number) => {
+    const productsList: Product[] = products;
+    if (name.trim() === "") {
+      alert("debe ingresar una producto antes de agregarlo al carrito");
+      return;
+    } else if (price === 0) {
+      alert(
+        "debe ingresar una precio al producto antes de agregarlo al carrito"
+      );
       return;
     }
-    tasksList.push({ id: tasks.length + 1, description: task });
-    localStorage.setItem("tasks", JSON.stringify(tasksList));
-    setInputValue("");
+    productsList.push({
+      id: products.length + 1,
+      name: name,
+      price: price,
+      quantity: quantity || 1,
+    });
+    localStorage.setItem("products", JSON.stringify(productsList));
+    setProductName("");
+    setProductPrice(0);
+    setProductQuantity(1);
     setRefreshList(true);
   };
 
@@ -91,18 +107,19 @@ const Main = () => {
 
   return (
     <Container>
-      <Title>TODO Manager</Title>
+      <Title>Shopping cart Manager</Title>
       <AddTaskContainer>
         <AddTaskInput
-          placeholder="add a task"
-          value={inputValue}
+          placeholder="add a product"
+          value={productName}
           onChange={(e) => {
-            setInputValue(e.target.value);
+            setProductName(e.target.value);
           }}
         />
         <AddTaskButton
           onClick={() => {
-            AddTask(inputValue);
+            //FIXME: send product price and quantity correctly
+            AddProduct(productName, 5);
           }}
         >
           +
@@ -115,7 +132,7 @@ const Main = () => {
           Borrar
         </AddTaskButton> */}
       </AddTaskContainer>
-      <Tasks tasks={tasks} />
+      <Products products={products} />
     </Container>
   );
 };
