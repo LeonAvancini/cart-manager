@@ -18,12 +18,42 @@ const TotalPriceContainer = styled.div`
   heigth: 40px;
   border: 2px solid blue;
 `;
+
+const TestContainer = styled.div`
+  display: flex;
+  justify-content: space-around;
+  border: 1px solid black;
+  height: 30px;
+  width: 100%;
+`;
+
+const DescriptionContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: blue;
+`;
+
 interface ProductsProps {
   products: Product[];
 }
 const Products = ({ products }: ProductsProps) => {
+  const total = (products: Product[]) => {
+    return products.reduce((sum, i) => {
+      return sum + i.price * i.quantity;
+    }, 0);
+  };
+
+  const totalValue = total(products);
+
   return (
     <Container>
+      <TestContainer>
+        <DescriptionContainer>Name</DescriptionContainer>
+        <DescriptionContainer>$</DescriptionContainer>
+        <DescriptionContainer>Q</DescriptionContainer>
+        <DescriptionContainer>SubT</DescriptionContainer>
+      </TestContainer>
       {products.map((product) => {
         return (
           <ProductItem
@@ -34,7 +64,7 @@ const Products = ({ products }: ProductsProps) => {
           />
         );
       })}
-      <TotalPriceContainer>Total:</TotalPriceContainer>
+      <TotalPriceContainer>Total:{totalValue}</TotalPriceContainer>
     </Container>
   );
 };

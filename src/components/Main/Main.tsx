@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import styled from "styled-components";
 
 import Products from "../Products/Products";
@@ -22,33 +23,6 @@ const AddTaskContainer = styled.div`
   height: 30px;
 `;
 
-const AddTaskInput = styled.input`
-  padding-left: 10px;
-  width: 100%;
-  height: 100%;
-`;
-
-const AddTaskButton = styled.button`
-  height: 100%;
-  color: #fff !important;
-  text-transform: uppercase;
-  text-decoration: none;
-  background: #ed3330;
-  // border-top-right-radius: 5px;
-  // border-bottom-right-radius: 5px;
-  padding: 10px;
-  display: inline-block;
-  border: none;
-  transition: all 0.4s ease 0s;
-  max-width: 50px;
-  &:hover {
-    background: #434343;
-    letter-spacing: 1px;
-    box-shadow: 5px 40px -10px rgba(0, 0, 0, 0.57);
-    transition: all 0.4s ease 0s;
-  }
-`;
-
 export interface Product {
   id: number;
   name: string;
@@ -57,11 +31,10 @@ export interface Product {
 }
 
 const Main = () => {
-  const [productName, setProductName] = useState<string>("");
-  const [productPrice, setProductPrice] = useState<number>(0);
-  const [productQuantity, setProductQuantity] = useState<number>(1);
   const [products, setProducts] = useState<Product[]>([]);
   const [refreshList, setRefreshList] = useState(false);
+
+  const { register, handleSubmit } = useForm();
 
   useEffect(() => {
     if (localStorage.getItem("products") !== null) {
@@ -72,27 +45,20 @@ const Main = () => {
     }
   }, [refreshList]);
 
-  const AddProduct = (name: string, price: number, quantity?: number) => {
+  interface ProductForm {
+    ProductName: string;
+    ProductPrice: number;
+    ProductQuantity: number;
+  }
+  const onSubmit = (data: ProductForm) => {
     const productsList: Product[] = products;
-    if (name.trim() === "") {
-      alert("debe ingresar una producto antes de agregarlo al carrito");
-      return;
-    } else if (price === 0) {
-      alert(
-        "debe ingresar una precio al producto antes de agregarlo al carrito"
-      );
-      return;
-    }
     productsList.push({
       id: products.length + 1,
-      name: name,
-      price: price,
-      quantity: quantity || 1,
+      name: data.ProductName,
+      price: data.ProductPrice,
+      quantity: data.ProductQuantity || 1,
     });
     localStorage.setItem("products", JSON.stringify(productsList));
-    setProductName("");
-    setProductPrice(0);
-    setProductQuantity(1);
     setRefreshList(true);
   };
 
@@ -109,28 +75,29 @@ const Main = () => {
     <Container>
       <Title>Shopping cart Manager</Title>
       <AddTaskContainer>
-        <AddTaskInput
-          placeholder="add a product"
-          value={productName}
-          onChange={(e) => {
-            setProductName(e.target.value);
-          }}
-        />
-        <AddTaskButton
-          onClick={() => {
-            //FIXME: send product price and quantity correctly
-            AddProduct(productName, 5);
-          }}
-        >
-          +
-        </AddTaskButton>
-        {/* <AddTaskButton
-          onClick={() => {
-            localStorage.clear();
-          }}
-        >
-          Borrar
-        </AddTaskButton> */}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <input
+            placeholder="* Name"
+            type="text"
+            name="ProductName"
+            ref={register({ required: true })}
+          />
+          <input
+            placeholder="* Price"
+            type="number"
+            min="0"
+            name="ProductPrice"
+            ref={register({ required: true })}
+          />
+          <input
+            placeholder="Quantity"
+            type="number"
+            min="0"
+            name="ProductQuantity"
+            ref={register}
+          />
+          <input type="submit" value="Add to cart" />
+        </form>
       </AddTaskContainer>
       <Products products={products} />
     </Container>

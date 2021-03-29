@@ -25,7 +25,7 @@ const DescriptionContainer = styled.div`
 interface ProductProps {
   name: string;
   price: number;
-  quantity?: number;
+  quantity: number | 1;
 }
 const ProductItem = ({ name, price, quantity }: ProductProps) => {
   return (
@@ -34,6 +34,8 @@ const ProductItem = ({ name, price, quantity }: ProductProps) => {
       <DescriptionContainer>{name}</DescriptionContainer>
       <DescriptionContainer>{price}</DescriptionContainer>
       <DescriptionContainer>{quantity}</DescriptionContainer>
+      {/* Fix subTotal price, because i cant get decimal numbers */}
+      <DescriptionContainer>{price * quantity ?? 1}</DescriptionContainer>
     </Container>
   );
 };
