@@ -36,8 +36,9 @@ const DescriptionContainer = styled.div`
 
 interface ProductsProps {
   products: Product[];
+  productId: (id: number) => void;
 }
-const Products = ({ products }: ProductsProps) => {
+const Products = ({ products, productId }: ProductsProps) => {
   const total = (products: Product[]) => {
     return products.reduce((sum, i) => {
       return sum + i.price * i.quantity;
@@ -54,17 +55,22 @@ const Products = ({ products }: ProductsProps) => {
         <DescriptionContainer>Q</DescriptionContainer>
         <DescriptionContainer>SubT</DescriptionContainer>
       </TestContainer>
-      {products.map((product) => {
+      {products.map((product, i) => {
         return (
           <ProductItem
             key={product.id}
             name={product.name}
             price={product.price}
             quantity={product.quantity}
+            clickHandler={() => {
+              productId(i);
+            }}
           />
         );
       })}
-      <TotalPriceContainer>Total:{totalValue}</TotalPriceContainer>
+      {totalValue > 0 && (
+        <TotalPriceContainer>Total:{totalValue}</TotalPriceContainer>
+      )}
     </Container>
   );
 };

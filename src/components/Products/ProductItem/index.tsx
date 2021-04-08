@@ -5,15 +5,12 @@ const Container = styled.div`
   display: flex;
   border: 1px solid black;
   height: 30px;
+  &:hover {
+    background-color: palevioletred;
+    color: white;
+  }
 `;
-const DeleteTaskContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: lightblue;
-  color: blue;
-  width: 30px;
-`;
+
 const DescriptionContainer = styled.div`
   display: flex;
   align-items: center;
@@ -26,15 +23,14 @@ interface ProductProps {
   name: string;
   price: number;
   quantity: number | 1;
+  clickHandler: () => void;
 }
-const ProductItem = ({ name, price, quantity }: ProductProps) => {
+const ProductItem = ({ name, price, quantity, clickHandler }: ProductProps) => {
   return (
-    <Container>
-      <DeleteTaskContainer>-</DeleteTaskContainer>
+    <Container onClick={clickHandler}>
       <DescriptionContainer>{name}</DescriptionContainer>
       <DescriptionContainer>{price}</DescriptionContainer>
       <DescriptionContainer>{quantity}</DescriptionContainer>
-      {/* Fix subTotal price, because i cant get decimal numbers */}
       <DescriptionContainer>{price * quantity ?? 1}</DescriptionContainer>
     </Container>
   );
