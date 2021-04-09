@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 const Container = styled.div`
   display: flex;
+  justify-content: flex-start;
   border: 1px solid black;
   height: 30px;
   &:hover {
@@ -16,6 +17,7 @@ const DescriptionContainer = styled.div`
   align-items: center;
   justify-content: center;
   color: blue;
+  margin: 10px;
   width: 100%;
 `;
 

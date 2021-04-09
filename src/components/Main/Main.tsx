@@ -8,7 +8,6 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  margin: 0 auto;
   background-color: lightgrey;
 `;
 
@@ -19,6 +18,7 @@ const Title = styled.div`
 `;
 
 const ButtonsContainer = styled.div`
+  margin: 10px;
   display: flex;
   justify-content: space-evenly;
 `;
@@ -26,6 +26,17 @@ const ButtonsContainer = styled.div`
 const FormContainer = styled.form`
   display: flex;
   flex-direction: column;
+  margin: 0 10px;
+`;
+
+const FormContainer1 = styled.div`
+  display: flex;
+`;
+
+const InputContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 50%;
 `;
 
 export interface Product {
@@ -99,27 +110,36 @@ const Main = () => {
     <Container>
       <Title>Shopping cart Manager</Title>
       <FormContainer onSubmit={handleSubmit(onSubmit)}>
-        <input
-          autoComplete="off"
-          placeholder="* Name"
-          type="text"
-          name="ProductName"
-          autoFocus
-          ref={register({ required: true })}
-        />
-        <input
-          autoComplete="off"
-          placeholder="* Price"
-          type="number"
-          min="0"
-          name="ProductPrice"
-          ref={register({ required: true })}
-        />
+        <FormContainer1>
+          <InputContainer>
+            <input
+              autoComplete="off"
+              placeholder="* Name"
+              maxLength={10}
+              type="text"
+              name="ProductName"
+              autoFocus
+              ref={register({ required: true })}
+            />
+          </InputContainer>
+          <InputContainer>
+            <input
+              autoComplete="off"
+              placeholder="* Price"
+              max="9999"
+              type="number"
+              min="0"
+              name="ProductPrice"
+              ref={register({ required: true })}
+            />
+          </InputContainer>
+        </FormContainer1>
         <input
           autoComplete="off"
           placeholder="Quantity"
           type="number"
           min="0"
+          max="9999"
           name="ProductQuantity"
           ref={register}
         />

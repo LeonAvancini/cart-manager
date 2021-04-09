@@ -8,30 +8,23 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  heigth: 100%;
-  border: 2px solid red;
   background-color: white;
 `;
 const TotalPriceContainer = styled.div`
   display: flex;
-  width: 100%;
-  heigth: 40px;
-  border: 2px solid blue;
-`;
-
-const TestContainer = styled.div`
-  display: flex;
-  justify-content: space-around;
-  border: 1px solid black;
-  height: 30px;
-  width: 100%;
-`;
-
-const DescriptionContainer = styled.div`
-  display: flex;
+  margin-top: 20px;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: blue;
+  padding-right: 20px;
+  width: 100%;
+  heigth: 40px;
+`;
+const Price = styled.div`
+  font-size: 20px;
+`;
+const TotalPriceTitle = styled.div`
+  padding-bottom: 5px;
 `;
 
 interface ProductsProps {
@@ -49,12 +42,6 @@ const Products = ({ products, productId }: ProductsProps) => {
 
   return (
     <Container>
-      <TestContainer>
-        <DescriptionContainer>Name</DescriptionContainer>
-        <DescriptionContainer>$</DescriptionContainer>
-        <DescriptionContainer>Q</DescriptionContainer>
-        <DescriptionContainer>SubT</DescriptionContainer>
-      </TestContainer>
       {products.map((product, i) => {
         return (
           <ProductItem
@@ -69,7 +56,10 @@ const Products = ({ products, productId }: ProductsProps) => {
         );
       })}
       {totalValue > 0 && (
-        <TotalPriceContainer>Total:{totalValue}</TotalPriceContainer>
+        <TotalPriceContainer>
+          <TotalPriceTitle>Total Price</TotalPriceTitle>
+          <Price>{totalValue}</Price>
+        </TotalPriceContainer>
       )}
     </Container>
   );
