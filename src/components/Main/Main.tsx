@@ -121,7 +121,7 @@ const Main = () => {
   };
 
   const checkList = (list: Product[]) => {
-    if (list.length === 0) {
+    if (list.length === 0 || list === []) {
       setCanClearCart(false);
     }
     setRefreshList(true);

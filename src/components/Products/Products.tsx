@@ -84,9 +84,11 @@ const Products = ({ products, productId }: ProductsProps) => {
           />
         );
       })}
-      {totalValue <= 0 && (
+      {products.length === 0 && (
         <TotalPriceContainer>
-          <TotalPriceTitle>Insert a product to show on the list</TotalPriceTitle>
+          <TotalPriceTitle>
+            Insert a product to show on the list
+          </TotalPriceTitle>
         </TotalPriceContainer>
       )}
       {totalValue > 0 && (
