@@ -74,6 +74,7 @@ const Main = () => {
     if (localStorage.getItem("products") !== null) {
       setProducts(JSON.parse(localStorage.getItem("products") || ""));
       setRefreshList(false);
+      setCanClearCart(true);
     } else {
       setProducts([]);
       setRefreshList(false);
@@ -81,25 +82,24 @@ const Main = () => {
   }, [refreshList]);
 
   interface ProductForm {
-    ProductName: string;
-    ProductPrice: number;
-    ProductQuantity: number;
+    productName: string;
+    productPrice: number;
+    productQuantity: number;
   }
   const onSubmit = (data: ProductForm) => {
     const productsList: Product[] = products;
     try {
-      if (!data.ProductName) {
+      if (!data.productName) {
         return;
       }
       productsList.push({
         id: products.length + 1,
-        name: data.ProductName,
-        price: data.ProductPrice,
-        quantity: data.ProductQuantity || 1,
+        name: data.productName,
+        price: data.productPrice || 0,
+        quantity: data.productQuantity || 1,
       });
       localStorage.setItem("products", JSON.stringify(productsList));
-      setCanClearCart(true);
-      setRefreshList(true);
+      checkList(products);
     } catch (e) {
       console.log(e);
     } finally {
@@ -117,6 +117,13 @@ const Main = () => {
     products.splice(id, 1);
     const productsList: Product[] = products;
     localStorage.setItem("products", JSON.stringify(productsList));
+    checkList(products);
+  };
+
+  const checkList = (list: Product[]) => {
+    if (list.length === 0) {
+      setCanClearCart(false);
+    }
     setRefreshList(true);
   };
   // Get item
@@ -136,10 +143,10 @@ const Main = () => {
           <InputContainer>
             <InputStyled
               autoComplete="off"
-              placeholder="* Name"
+              placeholder="* Product"
               maxLength={10}
               type="text"
-              name="ProductName"
+              name="productName"
               autoFocus
               ref={register({ required: true })}
             />
@@ -147,12 +154,12 @@ const Main = () => {
           <InputContainer>
             <InputStyled
               autoComplete="off"
-              placeholder="* Price"
+              placeholder="Price"
               max="9999"
               type="number"
               min="0"
-              name="ProductPrice"
-              ref={register({ required: true })}
+              name="productPrice"
+              ref={register}
             />
           </InputContainer>
         </FormContainer1>
@@ -162,7 +169,7 @@ const Main = () => {
           type="number"
           min="0"
           max="9999"
-          name="ProductQuantity"
+          name="productQuantity"
           ref={register}
         />
         <ButtonsContainer>

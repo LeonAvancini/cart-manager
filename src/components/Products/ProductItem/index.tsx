@@ -16,9 +16,10 @@ const DescriptionContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  color: blue;
   margin: 10px;
   width: 100%;
+  font-family: "Patrick Hand", cursive;
+ 
 `;
 
 interface ProductProps {
@@ -31,9 +32,9 @@ const ProductItem = ({ name, price, quantity, clickHandler }: ProductProps) => {
   return (
     <Container onClick={clickHandler}>
       <DescriptionContainer>{name}</DescriptionContainer>
-      <DescriptionContainer>{price}</DescriptionContainer>
+      <DescriptionContainer>${price}</DescriptionContainer>
       <DescriptionContainer>{quantity}</DescriptionContainer>
-      <DescriptionContainer>{price * quantity ?? 1}</DescriptionContainer>
+      <DescriptionContainer>${price * quantity ?? 1}</DescriptionContainer>
     </Container>
   );
 };
