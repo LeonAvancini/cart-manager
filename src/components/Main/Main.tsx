@@ -18,9 +18,18 @@ const Title = styled.div`
 `;
 
 const ButtonsContainer = styled.div`
-  margin: 10px;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: flex-start;
+`;
+
+const ButtonStyled = styled.button<{ propColor: string }>`
+  margin: 10px;
+  border: 2px solid ${(p) => p.propColor};
+  border-radius: 5px;
+  padding: 5px;
+  &:first-child {
+    margin-left: 0px;
+  }
 `;
 
 const FormContainer = styled.form`
@@ -39,6 +48,14 @@ const InputContainer = styled.div`
   width: 50%;
 `;
 
+const InputStyled = styled.input`
+  padding: 5px;
+  font-size: 15px;
+  margin: 2px;
+  border: 1px solid gray;
+  border-radius: 5px;
+`;
+
 export interface Product {
   id: number;
   name: string;
@@ -49,6 +66,7 @@ export interface Product {
 const Main = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [refreshList, setRefreshList] = useState(false);
+  const [canClearCart, setCanClearCart] = useState(false);
 
   const { register, handleSubmit, reset } = useForm();
 
@@ -68,9 +86,11 @@ const Main = () => {
     ProductQuantity: number;
   }
   const onSubmit = (data: ProductForm) => {
-    console.log("DATA", data);
     const productsList: Product[] = products;
     try {
+      if (!data.ProductName) {
+        return;
+      }
       productsList.push({
         id: products.length + 1,
         name: data.ProductName,
@@ -78,6 +98,7 @@ const Main = () => {
         quantity: data.ProductQuantity || 1,
       });
       localStorage.setItem("products", JSON.stringify(productsList));
+      setCanClearCart(true);
       setRefreshList(true);
     } catch (e) {
       console.log(e);
@@ -89,6 +110,7 @@ const Main = () => {
   const cleanCart = () => {
     localStorage.clear();
     setRefreshList(true);
+    setCanClearCart(false);
   };
 
   const removeItem = (id: number) => {
@@ -112,7 +134,7 @@ const Main = () => {
       <FormContainer onSubmit={handleSubmit(onSubmit)}>
         <FormContainer1>
           <InputContainer>
-            <input
+            <InputStyled
               autoComplete="off"
               placeholder="* Name"
               maxLength={10}
@@ -123,7 +145,7 @@ const Main = () => {
             />
           </InputContainer>
           <InputContainer>
-            <input
+            <InputStyled
               autoComplete="off"
               placeholder="* Price"
               max="9999"
@@ -134,7 +156,7 @@ const Main = () => {
             />
           </InputContainer>
         </FormContainer1>
-        <input
+        <InputStyled
           autoComplete="off"
           placeholder="Quantity"
           type="number"
@@ -144,8 +166,14 @@ const Main = () => {
           ref={register}
         />
         <ButtonsContainer>
-          <button type="submit">Add to cart</button>
-          <button onClick={() => cleanCart()}>Clean cart list</button>
+          <ButtonStyled propColor={"green"} type="submit">
+            Add to cart
+          </ButtonStyled>
+          {canClearCart && (
+            <ButtonStyled propColor={"red"} onClick={() => cleanCart()}>
+              Clean cart list
+            </ButtonStyled>
+          )}
         </ButtonsContainer>
       </FormContainer>
       <Products
